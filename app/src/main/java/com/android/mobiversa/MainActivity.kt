@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import com.android.mobiversa.MVP.View.RoomsView
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -20,8 +21,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
-
+class MainActivity : AppCompatActivity(), View.OnClickListener,RoomsView {
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -94,6 +94,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         return super.onCreateOptionsMenu(menu)
     }
 
+    //MVP implementation here
+    override fun setRoomsDetails() {
+
+    }
+
+    override fun showLoadingProgressBar() {
+
+    }
+
+    override fun hideLoadingProgressBar() {
+
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -103,9 +115,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 print("Logout")
                 Toast.makeText(applicationContext, "Logged Out", Toast.LENGTH_SHORT).show()
                 true
-            }
-
-            else -> {
+            }else -> {
                 print("Logout")
                 Toast.makeText(applicationContext, "Logged Out", Toast.LENGTH_SHORT).show()
                 return true
