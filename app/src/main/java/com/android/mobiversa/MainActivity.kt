@@ -10,6 +10,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import com.android.mobiversa.MVP.Presenter.RoomsPresenter
+import com.android.mobiversa.MVP.PresenterImpl.RoomPresenterImpl
 import com.android.mobiversa.MVP.View.RoomsView
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,7 +23,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener,RoomsView {
+class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,RoomsView {
         }
     }
 
+    private var roomPresenter: RoomsPresenter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -44,48 +47,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,RoomsView {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = ContextCompat.getColor(this, R.color.login_bg)
 
+        roomPresenter = RoomPresenterImpl(this, this);
+
+
+
         check_in_btn.setOnClickListener(this)
         check_out_btn.setOnClickListener(this)
-
-// Write a message to the database
-        val database = FirebaseDatabase.getInstance()
-        database.getReference("Rooms").child("Available Rooms").setValue("6")
-        database.getReference("Rooms").child("Booked Rooms").setValue("4")
-
-        val myReference = database.getReference("Rooms")
-
-        // Read from the database
-        myReference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                val value: HashMap<String, String> = dataSnapshot.value as HashMap<String, String>
-                val availableRooms = value["Available Rooms"]
-                val bookedRooms = value["Booked Rooms"]
-
-                if (availableRooms != null) {
-                    check_in_btn.isClickable = availableRooms.toInt() >= 1
-                }
-
-                if (bookedRooms != null) {
-                    check_out_btn.isClickable = bookedRooms.toInt() < 10
-                }
-
-
-                Log.d("Mobiversa", "Available Room: $availableRooms Booked Room: $bookedRooms ")
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
-                Log.w("Mobiversa", "Failed to read value.", error.toException())
-            }
-        })
-
+        (roomPresenter as RoomPresenterImpl).getRoomsDetails(FirebaseDatabase.getInstance(), "6", "4")
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -95,8 +69,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,RoomsView {
     }
 
     //MVP implementation here
-    override fun setRoomsDetails() {
+    override fun setAvailableRoomsDetails(availabeRooms: String?) {
+        check_in_btn.isClickable = availabeRooms!!.toInt() >= 1
+    }
 
+    override fun setBookedRoomsDetails(bookedRooms: String?) {
+        check_out_btn.isClickable = bookedRooms!!.toInt() < 10
     }
 
     override fun showLoadingProgressBar() {
@@ -106,6 +84,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,RoomsView {
     override fun hideLoadingProgressBar() {
 
     }
+
+    override fun gettingError(s: String?) {
+        Toast.makeText(applicationContext, s, Toast.LENGTH_SHORT).show()
+    }
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -115,7 +99,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,RoomsView {
                 print("Logout")
                 Toast.makeText(applicationContext, "Logged Out", Toast.LENGTH_SHORT).show()
                 true
-            }else -> {
+            }
+            else -> {
                 print("Logout")
                 Toast.makeText(applicationContext, "Logged Out", Toast.LENGTH_SHORT).show()
                 return true

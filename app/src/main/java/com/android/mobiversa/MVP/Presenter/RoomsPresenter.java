@@ -1,8 +1,8 @@
 package com.android.mobiversa.MVP.Presenter;
 
-/**
- * Created by P.Prabhakaran on 01,August,2019
- **/
+
+import com.google.firebase.database.FirebaseDatabase;
+
 public interface RoomsPresenter {
-    void getRoomsDetails();
+    void getRoomsDetails(FirebaseDatabase firebaseDatabase,String availableRooms,String bookedRooms);
 }
