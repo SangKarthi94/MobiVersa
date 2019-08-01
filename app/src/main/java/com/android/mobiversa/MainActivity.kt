@@ -75,18 +75,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
             this.availabeRooms = availabeRooms.toInt()
             check_in_btn.setBackgroundResource(R.drawable.rect_bor_select)
         } else {
-            this.availabeRooms = 0;
+            this.availabeRooms = 0
             check_in_btn.setBackgroundResource(R.drawable.rect_bor_filled)
         }
     }
 
     override fun setBookedRoomsDetails(bookedRooms: String?) {
-        check_out_btn.isClickable = bookedRooms!!.toInt() < 10
-        if (bookedRooms.toInt() > 0) {
-            this.bookedRooms = bookedRooms.toInt();
+        check_out_btn.isClickable = bookedRooms!!.toInt() >= 1
+        if (bookedRooms.toInt() >= 1) {
+            this.bookedRooms = bookedRooms.toInt()
             check_out_btn.setBackgroundResource(R.drawable.rect_bor_select)
         } else {
-            this.bookedRooms = 0;
+            this.bookedRooms = 0
             check_out_btn.setBackgroundResource(R.drawable.rect_bor_filled)
         }
     }
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         // Set Adapter to Spinner
         spinnerSelect.setAdapter(aa)
-        spinnerSelect?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spinnerSelect.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
@@ -145,8 +145,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
                 true
             }
             else -> {
-                print("Logout")
-                Toast.makeText(applicationContext, "Logged Out", Toast.LENGTH_SHORT).show()
                 return true
             }
         }
