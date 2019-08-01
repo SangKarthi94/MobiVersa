@@ -16,10 +16,16 @@ import kotlinx.android.synthetic.main.content_main.*
 
 class RoomPresenterImpl(private val mContext: Context, private val roomsView: RoomsView) : RoomsPresenter {
 
-    override fun getRoomsDetails(database: FirebaseDatabase, availableRooms: String, bookedRooms: String) {
+    override fun setAvailableRooms(firebaseDatabase: FirebaseDatabase?, availableRooms: String?) {
+        //Add Value Programatically
+        firebaseDatabase?.getReference("Rooms")?.child("Available Rooms")?.setValue(availableRooms)
+    }
 
-        database.getReference("Rooms").child("Available Rooms").setValue(availableRooms)
-        database.getReference("Rooms").child("Booked Rooms").setValue(bookedRooms)
+    override fun setBookedRooms(firebaseDatabase: FirebaseDatabase?, bookedRooms: String?) {
+        firebaseDatabase?.getReference("Rooms")?.child("Booked Rooms")?.setValue(bookedRooms)
+    }
+
+    override fun getRoomsDetails(database: FirebaseDatabase) {
 
         val myReference = database.getReference("Rooms")
 
@@ -28,14 +34,14 @@ class RoomPresenterImpl(private val mContext: Context, private val roomsView: Ro
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                val value: HashMap<String, String> = dataSnapshot.value as HashMap<String, String>
+                val value: HashMap<String, Any> = dataSnapshot.value as HashMap<String, Any>
                 val availableRooms = value["Available Rooms"]
                 val bookedRooms = value["Booked Rooms"]
                 if (availableRooms != null) {
-                    roomsView.setAvailableRoomsDetails(availableRooms)
+                    roomsView.setAvailableRoomsDetails(availableRooms.toString())
                 }
                 if (bookedRooms != null) {
-                    roomsView.setBookedRoomsDetails(bookedRooms)
+                    roomsView.setBookedRoomsDetails(bookedRooms.toString())
                 }
                 Log.d("Mobiversa", "Available Room: $availableRooms Booked Room: $bookedRooms ")
             }

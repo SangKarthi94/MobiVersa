@@ -10,12 +10,15 @@ import com.android.mobiversa.LoginActivity
 import com.android.mobiversa.MVP.Presenter.LoginPresenter
 import com.android.mobiversa.MVP.View.LoginView
 import com.android.mobiversa.MainActivity
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_login.*
 import java.text.DateFormat
 import java.util.*
 
-class LoginPresenterImpl(var context: Context, private val loginView: LoginView) : LoginPresenter {
-  private var isSignedUp:Boolean = false;
+class LoginPresenterImpl(private var context: Context, private val loginView: LoginView) : LoginPresenter {
+
+
+    private var isSignedUp:Boolean = false;
     override fun login(useName: String, password: String,signUp:Boolean) {
         var success = false
         this.isSignedUp = signUp;
@@ -42,14 +45,19 @@ class LoginPresenterImpl(var context: Context, private val loginView: LoginView)
         } else {
             when {
                 password.isEmpty() -> loginView.gettingError("Please enter a password!")
+
                 "MobiVersa" == useName-> {
+
+                    FirebaseDatabase.getInstance().getReference("Rooms").child("Available Rooms").setValue(10)
+                    FirebaseDatabase.getInstance().getReference("Rooms").child("Booked Rooms").setValue(0)
+
                     //Save to shared prefs
                     val session = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).edit()
                     session.putBoolean("isSignup", true)
                     session.apply()
                     success = true
                 }
-                else -> loginView.gettingError("Passwords do not match!")
+                else -> loginView.gettingError("Username do not match!")
             }
         }
 

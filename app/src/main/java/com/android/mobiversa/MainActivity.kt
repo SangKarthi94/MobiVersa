@@ -1,6 +1,8 @@
 package com.android.mobiversa
 
 import android.app.Dialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
@@ -52,11 +54,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
 
         check_in_btn.setOnClickListener(this)
         check_out_btn.setOnClickListener(this)
-        check_in_btn.setOnClickListener(this)
-        check_out_btn.setOnClickListener(this)
-        (roomPresenter as RoomPresenterImpl).getRoomsDetails(FirebaseDatabase.getInstance(), "6", "0")
+
+        //Listening to Firebase
+        (roomPresenter as RoomPresenterImpl).getRoomsDetails(FirebaseDatabase.getInstance())
+
+
+
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Sending Feedback Under Developing", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
     }
@@ -108,26 +113,43 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
         dialog.setContentView(R.layout.alert_room_book)
+
+        var spnrInt = 0
+
         val checkBtn = dialog.findViewById(R.id.alert_btn) as Button
-        checkBtn.text = title;
+        checkBtn.text = title
         val spinnerSelect = dialog.findViewById(R.id.alert_room_count_spinner) as Spinner
         val numbers = (1..rooms).toList()
         val aa = ArrayAdapter(this, android.R.layout.simple_spinner_item, numbers)
         // Set layout to use when the list of choices appear
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         // Set Adapter to Spinner
-        spinnerSelect.setAdapter(aa)
+        spinnerSelect.adapter = aa
         spinnerSelect.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                Toast.makeText(applicationContext, position.toString(), Toast.LENGTH_SHORT).show()
+
+                spnrInt = position + 1
             }
 
         }
         checkBtn.setOnClickListener {
+
+            when(title){
+                "Check In" -> {
+                    //10 is the maximum Number of rooms available
+                    (roomPresenter as RoomPresenterImpl).setAvailableRooms(FirebaseDatabase.getInstance(), (rooms - spnrInt).toString())
+                    (roomPresenter as RoomPresenterImpl).setBookedRooms(FirebaseDatabase.getInstance(), (10 - (rooms - spnrInt)).toString())
+                }
+                "Check Out" -> {
+                    (roomPresenter as RoomPresenterImpl).setAvailableRooms(FirebaseDatabase.getInstance(), (10 - (rooms - spnrInt)).toString())
+                    (roomPresenter as RoomPresenterImpl).setBookedRooms(FirebaseDatabase.getInstance(), (rooms - spnrInt).toString())
+                }
+            }
+
             dialog.dismiss()
         }
         dialog.show()
@@ -140,7 +162,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_logout -> {
-                print("Logout")
+                //Save to shared prefs
+                val session = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).edit()
+                session.putBoolean("isSignup", false)
+                session.apply()
+
+                //Intent to MainActivity
+                val hotelIntent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(hotelIntent)
+
                 Toast.makeText(applicationContext, "Logged Out", Toast.LENGTH_SHORT).show()
                 true
             }
@@ -148,5 +178,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
                 return true
             }
         }
+    }
+
+    override fun onBackPressed() {
+        val a = Intent(Intent.ACTION_MAIN)
+        a.addCategory(Intent.CATEGORY_HOME)
+        a.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(a)
     }
 }
