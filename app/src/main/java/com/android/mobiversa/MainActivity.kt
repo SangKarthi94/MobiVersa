@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         check_in_btn.setOnClickListener(this)
         check_out_btn.setOnClickListener(this)
 
-// Write a message to the database
+        // Write a message to the database
         val database = FirebaseDatabase.getInstance()
         database.getReference("Rooms").child("Available Rooms").setValue("6")
         database.getReference("Rooms").child("Booked Rooms").setValue("4")
@@ -65,10 +65,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                 if (availableRooms != null) {
                     check_in_btn.isClickable = availableRooms.toInt() >= 1
+                    if(availableRooms.toInt() >= 1){
+                        check_in_btn.setBackgroundResource(R.drawable.rect_bor_select)
+                    }else{
+                        check_in_btn.setBackgroundResource(R.drawable.rect_bor_filled)
+                    }
                 }
 
                 if (bookedRooms != null) {
-                    check_out_btn.isClickable = bookedRooms.toInt() < 10
+                    check_out_btn.isClickable = bookedRooms.toInt() > 0
+                    if(bookedRooms.toInt() > 0){
+                        check_out_btn.setBackgroundResource(R.drawable.rect_bor_select)
+                    }else{
+                        check_out_btn.setBackgroundResource(R.drawable.rect_bor_filled)
+                    }
+
+
                 }
 
 
