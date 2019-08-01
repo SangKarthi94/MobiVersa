@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="lit_grey">#EEEEEE</color>
+    <color name="v_lit_grey">#FAFAFA</color>
+    <color name="grey">#9E9E9E</color>
+    <color name="dim">#66000000</color>
+
+    <color name="txt_color">#014666</color>
+    <color name="txt_color_lit">#01547a</color>
+
+
+    <color name="chart_txt_color">#FFA997</color>
+    <color name="radio_btn">#29C0A2</color>
+
+    <color name="login_bg">#228BE2</color>
+    <color name="light_blue">#4290C9</color>
+    <color name="login_btn_bg">#FFA53C</color>
+    <color name="chart_color">#FFA448</color>
+</resources>
