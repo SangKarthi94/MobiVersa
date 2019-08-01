@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "434165243242",
+    "firebase_url": "https://mobiversa-4c0f9.firebaseio.com",
+    "project_id": "mobiversa-4c0f9",
+    "storage_bucket": "mobiversa-4c0f9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:434165243242:android:17489c1462964bc2",
+        "android_client_info": {
+          "package_name": "com.android.mobiversa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "434165243242-uc04hesalpeqh6mmpf5s4olmp5uj3f2j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.mobiversa",
+            "certificate_hash": "bc09a261dc201dc3d26b421693ddce1519e82cde"
+          }
+        },
+        {
+          "client_id": "434165243242-8upn4qadd8h6ikn96hij7cflvnel72ft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKg0FSnNecpqeJeHg4OPssyU2_Q9OyGP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "434165243242-8upn4qadd8h6ikn96hij7cflvnel72ft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
