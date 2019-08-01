@@ -18,8 +18,8 @@ class RoomPresenterImpl(private val mContext: Context, private val roomsView: Ro
 
     override fun getRoomsDetails(database: FirebaseDatabase, availableRooms: String, bookedRooms: String) {
 
-        database.getReference("Rooms").child("Available Rooms").setValue("6")
-        database.getReference("Rooms").child("Booked Rooms").setValue("4")
+        database.getReference("Rooms").child("Available Rooms").setValue(availableRooms)
+        database.getReference("Rooms").child("Booked Rooms").setValue(bookedRooms)
 
         val myReference = database.getReference("Rooms")
 
@@ -31,17 +31,12 @@ class RoomPresenterImpl(private val mContext: Context, private val roomsView: Ro
                 val value: HashMap<String, String> = dataSnapshot.value as HashMap<String, String>
                 val availableRooms = value["Available Rooms"]
                 val bookedRooms = value["Booked Rooms"]
-
                 if (availableRooms != null) {
                     roomsView.setAvailableRoomsDetails(availableRooms)
-
                 }
-
                 if (bookedRooms != null) {
-                    roomsView.setAvailableRoomsDetails(bookedRooms)
-
+                    roomsView.setBookedRoomsDetails(bookedRooms)
                 }
-
                 Log.d("Mobiversa", "Available Room: $availableRooms Booked Room: $bookedRooms ")
             }
 
