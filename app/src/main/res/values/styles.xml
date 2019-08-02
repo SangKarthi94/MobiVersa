@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -13,5 +13,10 @@
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="MyDatePickerStyle" parent="Theme.AppCompat.Light.Dialog" tools:ignore="NewApi">
+        <item name="android:colorAccent">@color/login_bg</item>
+        <item name="colorAccent">@color/login_bg</item>
+    </style>
 
 </resources>

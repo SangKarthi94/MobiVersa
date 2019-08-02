@@ -1,5 +1,7 @@
 package com.android.mobiversa
 
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -16,11 +18,9 @@ import com.android.mobiversa.MVP.View.RoomsView
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
@@ -33,13 +33,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
             R.id.check_out_btn -> {
                 showDialog(this, "Check Out", bookedRooms)
             }
+            R.id.txt_date -> {
+                datePicker(txt_date)
+            }
         }
     }
 
     private var roomPresenter: RoomsPresenter? = null
     private var availabeRooms: Int = 0
     private var bookedRooms: Int = 0
+    private var selectedDate: String = ""
 
+    @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -54,11 +59,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
 
         check_in_btn.setOnClickListener(this)
         check_out_btn.setOnClickListener(this)
+        txt_date.setOnClickListener(this)
 
+        val c = Calendar.getInstance().time
+        println("Current time => $c")
+
+        val firebaseFormat = SimpleDateFormat("MMddyy")
+
+        val viewDate = SimpleDateFormat("dd MMM yy")
+        selectedDate = firebaseFormat.format(c)
+
+        txt_date.text = viewDate.format(c)
+
+        Log.e("Firebase", selectedDate)
         //Listening to Firebase
-        (roomPresenter as RoomPresenterImpl).getRoomsDetails(FirebaseDatabase.getInstance())
-
-
+        (roomPresenter as RoomPresenterImpl).getRoomsDetails(FirebaseDatabase.getInstance(), selectedDate)
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Sending Feedback Under Developing", Snackbar.LENGTH_LONG)
@@ -138,21 +153,77 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RoomsView {
         }
         checkBtn.setOnClickListener {
 
-            when(title){
+            when (title) {
                 "Check In" -> {
                     //10 is the maximum Number of rooms available
-                    (roomPresenter as RoomPresenterImpl).setAvailableRooms(FirebaseDatabase.getInstance(), (rooms - spnrInt).toString())
-                    (roomPresenter as RoomPresenterImpl).setBookedRooms(FirebaseDatabase.getInstance(), (10 - (rooms - spnrInt)).toString())
+                    (roomPresenter as RoomPresenterImpl).setAvailableRooms(
+                        FirebaseDatabase.getInstance(),
+                        (rooms - spnrInt).toString(),
+                        selectedDate
+                    )
+                    (roomPresenter as RoomPresenterImpl).setBookedRooms(
+                        FirebaseDatabase.getInstance(),
+                        (10 - (rooms - spnrInt)).toString(),
+                        selectedDate
+                    )
                 }
                 "Check Out" -> {
-                    (roomPresenter as RoomPresenterImpl).setAvailableRooms(FirebaseDatabase.getInstance(), (10 - (rooms - spnrInt)).toString())
-                    (roomPresenter as RoomPresenterImpl).setBookedRooms(FirebaseDatabase.getInstance(), (rooms - spnrInt).toString())
+                    (roomPresenter as RoomPresenterImpl).setAvailableRooms(
+                        FirebaseDatabase.getInstance(),
+                        (10 - (rooms - spnrInt)).toString(),
+                        selectedDate
+                    )
+                    (roomPresenter as RoomPresenterImpl).setBookedRooms(
+                        FirebaseDatabase.getInstance(),
+                        (rooms - spnrInt).toString(),
+                        selectedDate
+                    )
                 }
             }
 
             dialog.dismiss()
         }
         dialog.show()
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun datePicker(date_txt: TextView) {
+
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+        //Nov-07-2018
+        val dpd = DatePickerDialog(
+            this,
+            R.style.MyDatePickerStyle,
+            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                // Display Selected date in textbox Nov-07-2018
+                val dateStr =
+                    String.format("%02d", (monthOfYear + 1)) + "/" + String.format("%02d", dayOfMonth) + "/" + year
+
+                val curFormater = SimpleDateFormat("MM/dd/yyyy")
+                val dateObj = curFormater.parse(dateStr)
+
+                //For FireBase
+                val firebaseFormat = SimpleDateFormat("MMddyy")
+                //ForView
+                val viewDate = SimpleDateFormat("dd MMM yy")
+
+                selectedDate = firebaseFormat.format(dateObj)
+                date_txt.text = viewDate.format(dateObj)
+
+                //Listening to Firebase
+                (roomPresenter as RoomPresenterImpl).getRoomsDetails(FirebaseDatabase.getInstance(), selectedDate)
+            },
+            year,
+            month,
+            day
+        )
+        dpd.datePicker.minDate = System.currentTimeMillis() - 1000
+        dpd.show()
 
     }
 

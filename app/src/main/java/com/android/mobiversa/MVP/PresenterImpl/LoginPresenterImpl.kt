@@ -47,9 +47,9 @@ class LoginPresenterImpl(private var context: Context, private val loginView: Lo
                 password.isEmpty() -> loginView.gettingError("Please enter a password!")
 
                 "MobiVersa" == useName-> {
-
-                    FirebaseDatabase.getInstance().getReference("Rooms").child("Available Rooms").setValue(10)
-                    FirebaseDatabase.getInstance().getReference("Rooms").child("Booked Rooms").setValue(0)
+//                    Tested without Date
+//                    FirebaseDatabase.getInstance().getReference("Rooms").child("Available Rooms").setValue(10)
+//                    FirebaseDatabase.getInstance().getReference("Rooms").child("Booked Rooms").setValue(0)
 
                     //Save to shared prefs
                     val session = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).edit()

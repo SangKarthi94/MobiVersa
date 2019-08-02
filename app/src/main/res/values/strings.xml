@@ -10,4 +10,5 @@
     <string name="hotel_mobihot">Hotel MobiHot</string>
     <string name="checkin">Check-in</string>
     <string name="signup">Signup</string>
+    <string name="select_date">Select Date</string>
 </resources>

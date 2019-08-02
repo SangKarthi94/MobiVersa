@@ -24,14 +24,35 @@
                       android:layout_weight="2">
 
 
-            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                          android:layout_gravity="end"
-                          android:gravity="end"
-                          android:orientation="horizontal">
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:gravity="end"
+                            android:orientation="horizontal">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:layout_toLeftOf="@id/check_in_btn"
+                              android:orientation="vertical"
+                              android:layout_marginRight="@dimen/xxhdpi_5">
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:text="@string/select_date"
+                              android:fontFamily="@font/opensans_light"
+                              android:textSize="@dimen/t_xxh_12"/>
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:id="@+id/txt_date"
+                              android:text="@string/select_date"
+                              android:textColor="@color/txt_color"
+                              android:fontFamily="@font/opensans_regular"
+                              android:textSize="@dimen/t_xxh_16"/>
+
+                </LinearLayout>
+
 
                 <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:id="@+id/check_in_btn"
                         android:background="@drawable/rect_bor_select"
+                        android:layout_toLeftOf="@id/check_out_btn"
                         android:textColor="@color/txt_color"
                         android:paddingLeft="@dimen/xxhdpi_10"
                         android:paddingRight="@dimen/xxhdpi_10"
@@ -42,6 +63,7 @@
 
                 <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:id="@+id/check_out_btn"
+                        android:layout_alignParentEnd="true"
                         android:background="@drawable/rect_bor_select"
                         android:textColor="@color/txt_color"
                         android:paddingLeft="@dimen/xxhdpi_10"
@@ -52,7 +74,7 @@
                         android:layout_marginLeft="@dimen/xxhdpi_20"
                         android:text="check-out"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:text="@string/hotel_mobihot"
@@ -61,9 +83,9 @@
                       android:textSize="@dimen/t_xxh_20"/>
 
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/xxhdpi_20"
-            android:text="@string/hotel_desc"
-            android:fontFamily="@font/opensans_regular"/>
+                      android:layout_marginTop="@dimen/xxhdpi_20"
+                      android:text="@string/hotel_desc"
+                      android:fontFamily="@font/opensans_regular"/>
 
         </LinearLayout>
 
